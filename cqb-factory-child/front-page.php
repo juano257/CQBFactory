@@ -10,6 +10,9 @@ if (!defined('ABSPATH')) {
 $payment_page = get_page_by_path('inscripcion-y-pago');
 $payment_url = $payment_page ? get_permalink($payment_page) : home_url('/inscripcion-y-pago/');
 $can_moderate = function_exists('cqb_factory_user_can_moderate') && cqb_factory_user_can_moderate();
+$current_player = function_exists('cqb_factory_get_current_player') ? cqb_factory_get_current_player() : null;
+$player_notice = function_exists('cqb_factory_get_player_notice') ? cqb_factory_get_player_notice() : null;
+$player_count = function_exists('cqb_factory_player_count') ? cqb_factory_player_count() : 0;
 
 get_header();
 ?>
@@ -31,16 +34,12 @@ get_header();
 
             <aside class="hero-panel reveal" aria-label="Metricas de la comunidad">
                 <div class="metric">
-                    <strong>+240</strong>
+                    <strong><?php echo esc_html(number_format_i18n($player_count)); ?></strong>
                     <span>Jugadores activos</span>
                 </div>
                 <div class="metric">
                     <strong>12</strong>
                     <span>Eventos este mes</span>
-                </div>
-                <div class="metric">
-                    <strong>4.9/5</strong>
-                    <span>Valoracion media</span>
                 </div>
             </aside>
         </div>
@@ -62,18 +61,18 @@ get_header();
 
             <div class="grid-2">
                 <article class="card reveal">
-                    <img class="feature-image" src="https://images.unsplash.com/photo-1520105072000-f44fc083e508?auto=format&fit=crop&w=1200&q=80" alt="Operadores en sesion nocturna de airsoft" loading="lazy" />
+                    <img class="feature-image" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80" alt="Operadores militares en patrulla nocturna" loading="lazy" />
                     <div class="card-body">
-                        <h3>Viernes: Sesion nocturna CQB</h3>
-                        <p>Partidas rapidas, focos tacticos y escenario full adrenalina para cerrar la semana en modo operador.</p>
+                        <h3>Viernes: Operación nocturna táctica</h3>
+                        <p>Ejercicios de patrulla, coordinación y acción en escenarios urbanos bajo condiciones de baja visibilidad.</p>
                     </div>
                 </article>
 
                 <article class="card reveal">
-                    <img class="feature-image" src="https://images.unsplash.com/photo-1547355253-ff0740f6e8c1?auto=format&fit=crop&w=1200&q=80" alt="Jornada diurna de entrenamiento y juego" loading="lazy" />
+                    <img class="feature-image" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80" alt="Equipo militar en maniobras diurnas" loading="lazy" />
                     <div class="card-body">
-                        <h3>Sabado y Domingo: Jornadas completas para nuevos jugadores y operadores avanzados</h3>
-                        <p>Bloques por nivel, coaching inicial y rotacion de modos para que cada escuadra mejore su desempeno.</p>
+                        <h3>Sábado y Domingo: Maniobras de equipo</h3>
+                        <p>Entrenamiento táctico, trabajo en escuadra y simulaciones de operaciones reales para todos los niveles.</p>
                     </div>
                 </article>
             </div>
@@ -178,62 +177,101 @@ get_header();
             <h2 class="section-title">Cuenta de jugador</h2>
             <p class="section-sub">Crea tu perfil de operador, administra tus reservas y monitorea tu progreso dentro de la comunidad.</p>
 
+            <?php if ($player_notice) : ?>
+                <div class="notice notice-<?php echo esc_attr($player_notice['type']); ?>">
+                    <?php echo esc_html($player_notice['message']); ?>
+                </div>
+            <?php endif; ?>
+
             <div class="account-grid">
                 <article class="panel reveal">
-                    <div class="tabs" role="tablist" aria-label="Acceso de cuenta">
-                        <button class="tab-btn active" role="tab" data-target="tab-crear" aria-selected="true" type="button">Crear cuenta</button>
-                        <button class="tab-btn" role="tab" data-target="tab-login" aria-selected="false" type="button">Iniciar sesion</button>
-                    </div>
+                    <?php if ($current_player) : ?>
+                        <div class="player-session-header">
+                            <div>
+                                <p class="session-kicker">Sesion activa</p>
+                                <h3><?php echo esc_html($current_player['full_name']); ?></h3>
+                            </div>
+                            <form action="<?php echo esc_url(home_url('/#cuenta')); ?>" method="post">
+                                <?php wp_nonce_field('cqb_player_action', 'cqb_player_nonce'); ?>
+                                <input type="hidden" name="cqb_player_action" value="logout" />
+                                <button class="btn btn-outline" type="submit">Cerrar sesion</button>
+                            </form>
+                        </div>
 
-                    <div class="tab-panel active" id="tab-crear" role="tabpanel">
-                        <p class="form-note">Registrate para reservar cupos y guardar tu historial de partidas.</p>
-                        <form class="field-grid" action="#" method="post">
+                        <div class="player-meta">
                             <div>
-                                <label class="label" for="nombre-crear">Nombre completo</label>
-                                <input id="nombre-crear" name="nombre" type="text" placeholder="Ej: Felipe Soto" required />
+                                <span class="label">Nombre</span>
+                                <strong><?php echo esc_html($current_player['full_name']); ?></strong>
                             </div>
                             <div>
-                                <label class="label" for="correo-crear">Correo</label>
-                                <input id="correo-crear" name="correo" type="email" placeholder="tuemail@dominio.cl" required />
+                                <span class="label">Correo</span>
+                                <strong><?php echo esc_html($current_player['email']); ?></strong>
                             </div>
-                            <div>
-                                <label class="label" for="pass-crear">Contrasena</label>
-                                <input id="pass-crear" name="contrasena" type="password" placeholder="Minimo 8 caracteres" required />
-                            </div>
-                            <button class="btn btn-primary" type="submit">Crear mi cuenta</button>
-                        </form>
-                    </div>
+                        </div>
 
-                    <div class="tab-panel" id="tab-login" role="tabpanel">
-                        <p class="form-note">Ingresa con tu cuenta para inscribirte en proximas partidas y revisar tus estadisticas.</p>
-                        <form class="field-grid" action="#" method="post">
-                            <div>
-                                <label class="label" for="nombre-login">Nombre</label>
-                                <input id="nombre-login" name="nombre_login" type="text" placeholder="Tu nombre de operador" required />
-                            </div>
-                            <div>
-                                <label class="label" for="correo-login">Correo</label>
-                                <input id="correo-login" name="correo_login" type="email" placeholder="tuemail@dominio.cl" required />
-                            </div>
-                            <div>
-                                <label class="label" for="pass-login">Contrasena</label>
-                                <input id="pass-login" name="pass_login" type="password" placeholder="Tu contrasena" required />
-                            </div>
-                            <button class="btn btn-outline" type="submit">Entrar al sistema</button>
-                        </form>
-                    </div>
+                        <p class="form-note">Tu perfil ya esta conectado a la base de datos externa. Las reservas activas y estadisticas se leen desde tu registro real.</p>
+                    <?php else : ?>
+                        <div class="tabs" role="tablist" aria-label="Acceso de cuenta">
+                            <button class="tab-btn active" role="tab" data-target="tab-crear" aria-selected="true" type="button">Crear cuenta</button>
+                            <button class="tab-btn" role="tab" data-target="tab-login" aria-selected="false" type="button">Iniciar sesion</button>
+                        </div>
+
+                        <div class="tab-panel active" id="tab-crear" role="tabpanel">
+                            <p class="form-note">Registrate para reservar cupos y guardar tu historial de partidas.</p>
+                            <form class="field-grid" action="<?php echo esc_url(home_url('/#cuenta')); ?>" method="post">
+                                <?php wp_nonce_field('cqb_player_action', 'cqb_player_nonce'); ?>
+                                <input type="hidden" name="cqb_player_action" value="register" />
+                                <div>
+                                    <label class="label" for="nombre-crear">Nombre completo</label>
+                                    <input id="nombre-crear" name="nombre" type="text" placeholder="Ej: Felipe Soto" required />
+                                </div>
+                                <div>
+                                    <label class="label" for="correo-crear">Correo</label>
+                                    <input id="correo-crear" name="correo" type="email" placeholder="tuemail@dominio.cl" required />
+                                </div>
+                                <div>
+                                    <label class="label" for="pass-crear">Contrasena</label>
+                                    <input id="pass-crear" name="contrasena" type="password" placeholder="Minimo 8 caracteres" minlength="8" required />
+                                </div>
+                                <button class="btn btn-primary" type="submit">Crear mi cuenta</button>
+                            </form>
+                        </div>
+
+                        <div class="tab-panel" id="tab-login" role="tabpanel">
+                            <p class="form-note">Ingresa con tu cuenta para inscribirte en proximas partidas y revisar tus estadisticas.</p>
+                            <form class="field-grid" action="<?php echo esc_url(home_url('/#cuenta')); ?>" method="post">
+                                <?php wp_nonce_field('cqb_player_action', 'cqb_player_nonce'); ?>
+                                <input type="hidden" name="cqb_player_action" value="login" />
+                                <div>
+                                    <label class="label" for="correo-login">Correo</label>
+                                    <input id="correo-login" name="correo_login" type="email" placeholder="tuemail@dominio.cl" required />
+                                </div>
+                                <div>
+                                    <label class="label" for="pass-login">Contrasena</label>
+                                    <input id="pass-login" name="pass_login" type="password" placeholder="Tu contrasena" required />
+                                </div>
+                                <button class="btn btn-outline" type="submit">Entrar al sistema</button>
+                            </form>
+                        </div>
+                    <?php endif; ?>
                 </article>
 
                 <aside class="panel reveal" aria-label="Panel de progreso del jugador">
                     <h3>Tu progreso</h3>
-                    <p class="form-note">Datos sincronizados con tus reservas y rendimiento semanal.</p>
+                    <p class="form-note">
+                        <?php if ($current_player) : ?>
+                            Datos sincronizados desde la base de jugadores de CQB Factory.
+                        <?php else : ?>
+                            Crea tu cuenta o inicia sesion para ver tus estadisticas reales.
+                        <?php endif; ?>
+                    </p>
                     <div class="stats">
-                        <div class="stat"><strong>28</strong><span>Partidas jugadas</span></div>
-                        <div class="stat"><strong>3</strong><span>Reservas activas</span></div>
-                        <div class="stat"><strong>16</strong><span>Victorias</span></div>
-                        <div class="stat"><strong>12</strong><span>Derrotas</span></div>
-                        <div class="stat"><strong>1.33</strong><span>Ratio V/D</span></div>
-                        <div class="stat"><strong>Recluta</strong><span>Rango actual</span></div>
+                        <div class="stat"><strong><?php echo esc_html($current_player ? number_format_i18n($current_player['matches_played']) : '0'); ?></strong><span>Partidas jugadas</span></div>
+                        <div class="stat"><strong><?php echo esc_html($current_player ? number_format_i18n($current_player['active_reservations']) : '0'); ?></strong><span>Reservas activas</span></div>
+                        <div class="stat"><strong><?php echo esc_html($current_player ? number_format_i18n($current_player['victories']) : '0'); ?></strong><span>Victorias</span></div>
+                        <div class="stat"><strong><?php echo esc_html($current_player ? number_format_i18n($current_player['defeats']) : '0'); ?></strong><span>Derrotas</span></div>
+                        <div class="stat"><strong><?php echo esc_html($current_player ? number_format_i18n((float) $current_player['ratio'], 2) : '0.00'); ?></strong><span>Ratio V/D</span></div>
+                        <div class="stat"><strong><?php echo esc_html($current_player ? $current_player['email'] : 'Sin sesion'); ?></strong><span>Correo</span></div>
                     </div>
                 </aside>
             </div>

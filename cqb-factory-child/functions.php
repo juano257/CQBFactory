@@ -7,6 +7,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+require_once get_stylesheet_directory() . '/inc/external-players.php';
+
 add_action('wp_enqueue_scripts', function () {
     wp_enqueue_style(
         'cqb-google-fonts',
@@ -48,6 +50,12 @@ add_action('after_setup_theme', function () {
  */
 function cqb_factory_user_can_moderate()
 {
+    $external_player = function_exists('cqb_factory_get_current_player') ? cqb_factory_get_current_player() : null;
+
+    if (function_exists('cqb_factory_player_can_moderate') && cqb_factory_player_can_moderate($external_player)) {
+        return true;
+    }
+
     if (!is_user_logged_in()) {
         return false;
     }

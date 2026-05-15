@@ -520,6 +520,64 @@ body.page-template-page-inscripcion-y-pago::before {
   margin-top: 12px;
 }
 
+#cqb-factory .notice {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(111, 150, 91, 0.3);
+  background: rgba(95, 124, 79, 0.12);
+}
+
+#cqb-factory .notice-success {
+  border-color: rgba(111, 150, 91, 0.45);
+  background: rgba(95, 124, 79, 0.18);
+}
+
+#cqb-factory .notice-error {
+  border-color: rgba(214, 83, 83, 0.45);
+  background: rgba(214, 83, 83, 0.12);
+}
+
+#cqb-factory .player-session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+#cqb-factory .player-session-header h3 {
+  margin: 0;
+}
+
+#cqb-factory .session-kicker {
+  margin: 0 0 4px;
+  color: var(--accent-soft);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+#cqb-factory .player-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+#cqb-factory .player-meta div {
+  border: 1px solid rgba(111, 150, 91, 0.28);
+  border-radius: 12px;
+  padding: 12px;
+  background: rgba(95, 124, 79, 0.11);
+}
+
+#cqb-factory .player-meta strong {
+  display: block;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
 #cqb-factory .label {
   display: block;
   font-size: 0.86rem;
