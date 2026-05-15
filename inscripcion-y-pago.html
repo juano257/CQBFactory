@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscripción y Pago | CQB Factory</title>
+  <meta name="description" content="Flujo de inscripción y pago para reservar partidas CQB en CQB Factory." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0d0f10;
+      --text: #f4f6f7;
+      --text-soft: #b7c0c3;
+      --line: #31403a;
+      --green: #5f7c4f;
+      --accent: #f9a826;
+      --accent-soft: #ffd447;
+      --radius: 18px;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Manrope", sans-serif;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(111, 150, 91, 0.16), transparent 35%),
+        radial-gradient(circle at 88% 8%, rgba(249, 168, 38, 0.12), transparent 30%),
+        linear-gradient(180deg, #090b0c 0%, #111517 100%);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .wrap {
+      width: min(980px, 92vw);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(8, 10, 11, 0.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(111, 150, 91, 0.35);
+    }
+
+    .nav {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      text-decoration: none;
+      color: var(--text);
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.06em;
+      font-size: 1.9rem;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      padding: 0 20px;
+      min-height: 46px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Manrope", sans-serif;
+    }
+
+    .btn-primary {
+      color: #111;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      box-shadow: 0 8px 20px rgba(249, 168, 38, 0.3);
+    }
+
+    .btn-outline {
+      color: var(--text);
+      background: rgba(95, 124, 79, 0.13);
+      border: 1px solid var(--line);
+    }
+
+    .section { padding: 74px 0; }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-soft);
+      font-weight: 700;
+      font-size: 0.76rem;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .title {
+      margin: 0;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.05em;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      text-transform: uppercase;
+    }
+
+    .sub {
+      margin: 12px 0 0;
+      color: var(--text-soft);
+      max-width: 720px;
+    }
+
+    .payment-box {
+      margin-top: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(20, 26, 27, 0.96), rgba(16, 20, 21, 0.9)),
+        radial-gradient(circle at 84% 20%, rgba(249, 168, 38, 0.13), transparent 42%);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .payment-steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .step {
+      border: 1px solid rgba(111, 150, 91, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(95, 124, 79, 0.08);
+    }
+
+    .step h3 {
+      margin: 0 0 8px;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 1.3rem;
+    }
+
+    .summary {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.93rem;
+      color: var(--text-soft);
+    }
+
+    .summary div {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(111, 150, 91, 0.3);
+      padding-bottom: 6px;
+    }
+
+    .summary strong { color: #fff; }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(20, 25, 27, 0.9);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .status h3 {
+      margin: 0 0 8px;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 1.4rem;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(111, 150, 91, 0.22);
+      padding: 24px 0 34px;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 860px) {
+      .payment-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="index.html">CQB FACTORY</a>
+      <a class="btn btn-outline" href="index.html#partidas">Volver a partidas</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="wrap">
+        <span class="eyebrow">Centro de Operaciones CQB</span>
+        <h1 class="title">Inscripción y Pago</h1>
+        <p class="sub">Confirma tu cupo y completa el pago externo para asegurar tu participación en la partida seleccionada.</p>
+
+        <div class="payment-box">
+          <div class="payment-steps">
+            <article class="step">
+              <h3>Paso 1: Confirma tu inscripción</h3>
+              <div class="summary">
+                <div><span>Partida</span><strong>Operación Carbono</strong></div>
+                <div><span>Fecha</span><strong>Viernes 21:00</strong></div>
+                <div><span>Equipo</span><strong>Azul</strong></div>
+                <div><span>Total a pagar</span><strong>CLP 8.000</strong></div>
+              </div>
+            </article>
+
+            <article class="step">
+              <h3>Paso 2: Paga con proveedor externo</h3>
+              <p class="sub" style="margin-top: 0;">Usamos pasarela externa segura. Tu inscripción se confirma cuando validas el pago.</p>
+              <div class="actions">
+                <button class="btn btn-primary" type="button">Iniciar pago externo</button>
+                <button class="btn btn-outline" type="button">Ya pagué, confirmar inscripción</button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="status">
+          <h3>Estado de la reserva</h3>
+          <div class="summary">
+            <div><span>Estado</span><strong>Pendiente de confirmación</strong></div>
+            <div><span>Código de reserva</span><strong>CQB-2026-0418</strong></div>
+            <div><span>Soporte</span><strong>soporte@cqbfactory.cl</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">CQB Factory 2026. Comunidad de airsoft CQB enfocada en seguridad, estrategia y juego limpio.</div>
+  </footer>
+</body>
+</html>

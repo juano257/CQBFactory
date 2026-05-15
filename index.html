@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CQB Factory | Comunidad Airsoft CQB</title>
+  <meta name="description" content="Plataforma de reservas de partidas CQB: crea tu cuenta, inscríbete a eventos y gestiona tu progreso como operador." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0d0f10;
+      --bg-soft: #131718;
+      --bg-panel: #171c1e;
+      --text: #f4f6f7;
+      --text-soft: #b7c0c3;
+      --green: #5f7c4f;
+      --green-strong: #6f965b;
+      --charcoal: #252b2d;
+      --line: #31403a;
+      --accent: #f9a826;
+      --accent-soft: #ffd447;
+      --danger: #f45b69;
+      --blue-team: #4886ff;
+      --red-team: #d65353;
+      --radius: 18px;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Manrope", sans-serif;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(111, 150, 91, 0.16), transparent 35%),
+        radial-gradient(circle at 88% 8%, rgba(249, 168, 38, 0.12), transparent 30%),
+        radial-gradient(circle at 50% 110%, rgba(255, 212, 71, 0.08), transparent 45%),
+        linear-gradient(180deg, #090b0c 0%, #111517 100%);
+      min-height: 100vh;
+      line-height: 1.5;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 1px, transparent 1px, transparent 4px);
+      mix-blend-mode: overlay;
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .wrap {
+      width: min(1180px, 92vw);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section {
+      padding: 88px 0;
+    }
+
+    .section-title {
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.05em;
+      font-size: clamp(2rem, 4.6vw, 3.2rem);
+      margin: 0 0 14px;
+      text-transform: uppercase;
+    }
+
+    .section-sub {
+      margin: 0;
+      color: var(--text-soft);
+      max-width: 760px;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-soft);
+      font-weight: 700;
+      font-size: 0.76rem;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(8, 10, 11, 0.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(111, 150, 91, 0.35);
+    }
+
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.9rem;
+      letter-spacing: 0.06em;
+    }
+
+    .brand-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(160deg, var(--accent) 0%, #ffcf52 100%);
+      box-shadow: 0 0 0 2px rgba(95, 124, 79, 0.4);
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      color: var(--text-soft);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.25s ease;
+    }
+
+    .menu a:hover,
+    .menu a:focus-visible {
+      color: #fff;
+    }
+
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      padding: 0 22px;
+      min-height: 48px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-family: "Manrope", sans-serif;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: #111;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
+      box-shadow: 0 8px 20px rgba(249, 168, 38, 0.3);
+    }
+
+    .btn-outline {
+      color: var(--text);
+      background: rgba(95, 124, 79, 0.13);
+      border: 1px solid var(--line);
+    }
+
+    .hero {
+      padding: 90px 0 72px;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 26px;
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: stretch;
+    }
+
+    .hero h1 {
+      font-family: "Bebas Neue", sans-serif;
+      text-transform: uppercase;
+      font-size: clamp(2.8rem, 8vw, 5.2rem);
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      margin: 0 0 22px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 1.05rem;
+      max-width: 700px;
+    }
+
+    .hero-actions {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(170deg, rgba(19, 23, 24, 0.94) 0%, rgba(15, 19, 20, 0.92) 100%);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(249, 168, 38, 0.18) 0%, transparent 70%);
+    }
+
+    .metric {
+      display: grid;
+      gap: 2px;
+      border: 1px solid rgba(111, 150, 91, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(20, 26, 27, 0.6);
+    }
+
+    .metric strong {
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.04em;
+      font-size: 1.9rem;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .metric span {
+      color: var(--text-soft);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(160deg, rgba(21, 26, 28, 0.92), rgba(17, 21, 23, 0.88));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card h3,
+    .service h3,
+    .event-card h3,
+    .panel h3 {
+      margin: 0 0 8px;
+      font-family: "Bebas Neue", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 1.5rem;
+    }
+
+    .card p,
+    .service p,
+    .event-card p,
+    .panel p,
+    .form-note,
+    .label {
+      margin: 0;
+      color: var(--text-soft);
+    }
+
+    .bullet-list {
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 30px;
+      color: #e6ebed;
+    }
+
+    .bullet-list li::before {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 2px solid var(--green-strong);
+      background: rgba(111, 150, 91, 0.18);
+      position: absolute;
+      top: 5px;
+      left: 0;
+    }
+
+    .feature-image {
+      height: 210px;
+      object-fit: cover;
+      width: 100%;
+      filter: saturate(0.78) contrast(1.05);
+    }
+
+    .services-grid {
+      margin-top: 30px;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .service {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      background: linear-gradient(175deg, rgba(20, 25, 27, 0.95), rgba(17, 21, 22, 0.86));
+      box-shadow: var(--shadow);
+      min-height: 220px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, rgba(95, 124, 79, 0.08), transparent 55%);
+      pointer-events: none;
+    }
+
+    .events-grid {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .event-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(19, 23, 24, 0.95), rgba(15, 19, 21, 0.9)),
+        repeating-linear-gradient(90deg, transparent 0px, transparent 19px, rgba(255, 255, 255, 0.03) 19px, rgba(255, 255, 255, 0.03) 20px);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 10px;
+    }
+
+    .event-meta {
+      display: grid;
+      gap: 6px;
+      font-size: 0.92rem;
+      color: var(--text-soft);
+    }
+
+    .event-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: rgba(95, 124, 79, 0.12);
+      border: 1px solid rgba(111, 150, 91, 0.26);
+      border-radius: 10px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 700;
+      color: #0f1213;
+      border-radius: 999px;
+      padding: 4px 9px;
+    }
+
+    .tag-blue { background: rgba(72, 134, 255, 0.9); }
+    .tag-red { background: rgba(214, 83, 83, 0.9); }
+
+    .account-grid {
+      margin-top: 28px;
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(160deg, rgba(20, 25, 27, 0.95), rgba(17, 21, 23, 0.9));
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .tabs {
+      display: inline-flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: rgba(95, 124, 79, 0.12);
+      color: var(--text);
+      border-radius: 10px;
+      min-height: 38px;
+      padding: 0 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      border-color: rgba(249, 168, 38, 0.7);
+      background: rgba(249, 168, 38, 0.15);
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeIn 0.28s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+      margin-top: 12px;
+    }
+
+    .label {
+      display: block;
+      font-size: 0.86rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(111, 150, 91, 0.35);
+      background: rgba(9, 13, 14, 0.86);
+      color: #f8fafb;
+      padding: 12px 12px;
+      font-family: "Manrope", sans-serif;
+      font-size: 0.95rem;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: 2px solid rgba(249, 168, 38, 0.45);
+      border-color: rgba(249, 168, 38, 0.72);
+    }
+
+    .stats {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 10px;
+    }
+
+    .stat {
+      border: 1px solid rgba(111, 150, 91, 0.28);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(95, 124, 79, 0.11);
+      display: grid;
+      gap: 2px;
+    }
+
+    .stat strong {
+      font-size: 1.2rem;
+      line-height: 1;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    .stat span {
+      color: var(--text-soft);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .payment-box {
+      margin-top: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(20, 26, 27, 0.96), rgba(16, 20, 21, 0.9)),
+        radial-gradient(circle at 84% 20%, rgba(249, 168, 38, 0.13), transparent 42%);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .payment-steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .step {
+      border: 1px solid rgba(111, 150, 91, 0.35);
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(95, 124, 79, 0.08);
+    }
+
+    .step h4 {
+      margin: 0 0 8px;
+      font-family: "Bebas Neue", sans-serif;
+      letter-spacing: 0.04em;
+      font-size: 1.22rem;
+      text-transform: uppercase;
+    }
+
+    .summary {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.93rem;
+      color: var(--text-soft);
+    }
+
+    .summary div {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px dashed rgba(111, 150, 91, 0.3);
+      padding-bottom: 6px;
+    }
+
+    .summary strong {
+      color: #fff;
+    }
+
+    .contact-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 0.95fr;
+      gap: 18px;
+    }
+
+    .contact-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(160deg, rgba(20, 26, 27, 0.95), rgba(15, 20, 21, 0.9));
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .cta {
+      margin-top: 14px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(249, 168, 38, 0.5);
+      background: rgba(249, 168, 38, 0.1);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(111, 150, 91, 0.22);
+      padding: 24px 0 38px;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    .menu-toggle {
+      display: none;
+      min-height: 42px;
+      min-width: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(95, 124, 79, 0.12);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .account-grid,
+      .contact-grid,
+      .payment-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid,
+      .events-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .section {
+        padding: 70px 0;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .menu {
+        position: absolute;
+        top: 76px;
+        left: 4vw;
+        right: 4vw;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: rgba(13, 17, 18, 0.95);
+        padding: 16px;
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .menu.open {
+        display: flex;
+      }
+
+      .nav .btn-primary {
+        display: none;
+      }
+
+      .grid-2,
+      .services-grid,
+      .events-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 62px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a href="#inicio" class="brand" aria-label="Ir al inicio de CQB Factory">
+        <span class="brand-mark" aria-hidden="true"></span>
+        CQB FACTORY
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">MENU</button>
+
+      <nav class="menu" id="mainMenu">
+        <a href="#inicio">Inicio</a>
+        <a href="#partidas">Partidas</a>
+        <a href="#cuenta">Cuenta</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+
+      <a href="#cuenta" class="btn btn-primary">Crear cuenta</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="wrap hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">Centro de Operaciones CQB</span>
+          <h1>La experiencia CQB más cerca de ti</h1>
+          <p>
+            Somos una comunidad enfocada 100% en partidas CQB. Reserva tu lugar, crea tu cuenta y registra tu progreso
+            para escalar de recluta a operador.
+          </p>
+          <div class="hero-actions">
+            <a href="#cuenta" class="btn btn-primary">Abrir mi cuenta</a>
+            <a href="#cuenta" class="btn btn-outline">Ya soy operador</a>
+          </div>
+        </div>
+
+        <aside class="hero-panel reveal" aria-label="Métricas de la comunidad">
+          <div class="metric">
+            <strong>+240</strong>
+            <span>Jugadores activos</span>
+          </div>
+          <div class="metric">
+            <strong>12</strong>
+            <span>Eventos este mes</span>
+          </div>
+          <div class="metric">
+            <strong>4.9/5</strong>
+            <span>Valoración media</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="descripcion">
+      <div class="wrap reveal">
+        <h2 class="section-title">Combate cercano, estrategia real y ritmo intenso</h2>
+        <p class="section-sub">
+          En CQB cada decisión cuenta. Las partidas se viven en distancias cortas, escenarios cerrados y con reacción rápida,
+          donde la coordinación del equipo marca la diferencia entre aguantar la posición o perder el objetivo.
+        </p>
+
+        <ul class="bullet-list">
+          <li>Actividad fija viernes, sábado y domingo</li>
+          <li>Partidas por objetivos: Domination, Team Deathmatch y Bomb Defuse</li>
+          <li>Seguridad obligatoria y arbitraje en cada encuentro</li>
+        </ul>
+
+        <div class="grid-2">
+          <article class="card reveal">
+            <img class="feature-image" src="https://images.unsplash.com/photo-1520105072000-f44fc083e508?auto=format&fit=crop&w=1200&q=80" alt="Operadores en sesión nocturna de airsoft" loading="lazy" />
+            <div class="card-body">
+              <h3>Viernes: Sesión nocturna CQB</h3>
+              <p>Partidas rápidas, focos tácticos y escenario full adrenalina para cerrar la semana en modo operador.</p>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <img class="feature-image" src="https://images.unsplash.com/photo-1547355253-ff0740f6e8c1?auto=format&fit=crop&w=1200&q=80" alt="Jornada diurna de entrenamiento y juego" loading="lazy" />
+            <div class="card-body">
+              <h3>Sábado y Domingo: Jornadas completas para nuevos jugadores y operadores avanzados</h3>
+              <p>Bloques por nivel, coaching inicial y rotación de modos para que cada escuadra mejore su desempeño.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="servicios">
+      <div class="wrap reveal">
+        <h2 class="section-title">Servicios Operativos</h2>
+        <p class="section-sub">Una plataforma pensada para reservar, jugar seguro y escalar tu nivel dentro de la comunidad.</p>
+
+        <div class="services-grid">
+          <article class="service reveal">
+            <h3>Tipos de partidas</h3>
+            <p>Públicas, por niveles, privadas y eventos especiales con cupos controlados por escuadra.</p>
+          </article>
+
+          <article class="service reveal">
+            <h3>Rental disponible</h3>
+            <p>Réplica, careta y protección para nuevos jugadores que quieran vivir su primera experiencia CQB.</p>
+          </article>
+
+          <article class="service reveal">
+            <h3>Arriendo para eventos</h3>
+            <p>Cancha para cumpleaños, actividades de empresa y entrenamientos tácticos personalizados.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="partidas">
+      <div class="wrap reveal">
+        <h2 class="section-title">Próximas partidas</h2>
+        <p class="section-sub">Calendario táctico con disponibilidad en tiempo real y reserva directa de cupos.</p>
+
+        <div class="events-grid">
+          <article class="event-card reveal">
+            <h3>Operación Cerrojo Nocturno</h3>
+            <div class="event-meta">
+              <span>Fecha y hora: Viernes 21:30</span>
+              <span>Precio: CLP 8.000</span>
+              <span>Cupos disponibles: 14</span>
+            </div>
+            <div class="event-row"><span>Equipo Rojo</span><span class="tag tag-red">7 cupos</span></div>
+            <div class="event-row"><span>Equipo Azul</span><span class="tag tag-blue">7 cupos</span></div>
+            <a class="btn btn-primary" href="inscripcion-y-pago.html">Inscribirme</a>
+          </article>
+
+          <article class="event-card reveal">
+            <h3>Operación Punto de Quiebre</h3>
+            <div class="event-meta">
+              <span>Fecha y hora: Sábado 10:00</span>
+              <span>Precio: CLP 10.000</span>
+              <span>Cupos disponibles: 20</span>
+            </div>
+            <div class="event-row"><span>Equipo Rojo</span><span class="tag tag-red">10 cupos</span></div>
+            <div class="event-row"><span>Equipo Azul</span><span class="tag tag-blue">10 cupos</span></div>
+            <a class="btn btn-primary" href="inscripcion-y-pago.html">Inscribirme</a>
+          </article>
+
+          <article class="event-card reveal">
+            <h3>Operación Sombra de Acero</h3>
+            <div class="event-meta">
+              <span>Fecha y hora: Sábado 21:00</span>
+              <span>Precio: CLP 11.000</span>
+              <span>Cupos disponibles: 18</span>
+            </div>
+            <div class="event-row"><span>Equipo Rojo</span><span class="tag tag-red">9 cupos</span></div>
+            <div class="event-row"><span>Equipo Azul</span><span class="tag tag-blue">9 cupos</span></div>
+            <a class="btn btn-primary" href="inscripcion-y-pago.html">Inscribirme</a>
+          </article>
+
+          <article class="event-card reveal">
+            <h3>Operación Amanecer Silente</h3>
+            <div class="event-meta">
+              <span>Fecha y hora: Domingo 10:00</span>
+              <span>Precio: CLP 9.000</span>
+              <span>Cupos disponibles: 16</span>
+            </div>
+            <div class="event-row"><span>Equipo Rojo</span><span class="tag tag-red">8 cupos</span></div>
+            <div class="event-row"><span>Equipo Azul</span><span class="tag tag-blue">8 cupos</span></div>
+            <a class="btn btn-primary" href="inscripcion-y-pago.html">Inscribirme</a>
+          </article>
+
+          <article class="event-card reveal">
+            <h3>Operación Último Bastión</h3>
+            <div class="event-meta">
+              <span>Fecha y hora: Domingo 20:00</span>
+              <span>Precio: CLP 10.000</span>
+              <span>Cupos disponibles: 12</span>
+            </div>
+            <div class="event-row"><span>Equipo Rojo</span><span class="tag tag-red">6 cupos</span></div>
+            <div class="event-row"><span>Equipo Azul</span><span class="tag tag-blue">6 cupos</span></div>
+            <a class="btn btn-primary" href="inscripcion-y-pago.html">Inscribirme</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="cuenta">
+      <div class="wrap reveal">
+        <h2 class="section-title">Cuenta de jugador</h2>
+        <p class="section-sub">Crea tu perfil de operador, administra tus reservas y monitorea tu progreso dentro de la comunidad.</p>
+
+        <div class="account-grid">
+          <article class="panel reveal">
+            <div class="tabs" role="tablist" aria-label="Acceso de cuenta">
+              <button class="tab-btn active" role="tab" data-target="tab-crear" aria-selected="true">Crear cuenta</button>
+              <button class="tab-btn" role="tab" data-target="tab-login" aria-selected="false">Iniciar sesión</button>
+            </div>
+
+            <div class="tab-panel active" id="tab-crear" role="tabpanel">
+              <p class="form-note">Regístrate para reservar cupos y guardar tu historial de partidas.</p>
+              <form class="field-grid" action="#" method="post">
+                <div>
+                  <label class="label" for="nombre-crear">Nombre completo</label>
+                  <input id="nombre-crear" name="nombre" type="text" placeholder="Ej: Felipe Soto" required />
+                </div>
+                <div>
+                  <label class="label" for="correo-crear">Correo</label>
+                  <input id="correo-crear" name="correo" type="email" placeholder="tuemail@dominio.cl" required />
+                </div>
+                <div>
+                  <label class="label" for="pass-crear">Contraseña</label>
+                  <input id="pass-crear" name="contrasena" type="password" placeholder="Mínimo 8 caracteres" required />
+                </div>
+                <button class="btn btn-primary" type="submit">Crear mi cuenta</button>
+              </form>
+            </div>
+
+            <div class="tab-panel" id="tab-login" role="tabpanel">
+              <p class="form-note">Ingresa con tu cuenta para inscribirte en próximas partidas y revisar tus estadísticas.</p>
+              <form class="field-grid" action="#" method="post">
+                <div>
+                  <label class="label" for="nombre-login">Nombre</label>
+                  <input id="nombre-login" name="nombre_login" type="text" placeholder="Tu nombre de operador" required />
+                </div>
+                <div>
+                  <label class="label" for="correo-login">Correo</label>
+                  <input id="correo-login" name="correo_login" type="email" placeholder="tuemail@dominio.cl" required />
+                </div>
+                <div>
+                  <label class="label" for="pass-login">Contraseña</label>
+                  <input id="pass-login" name="pass_login" type="password" placeholder="Tu contraseña" required />
+                </div>
+                <button class="btn btn-outline" type="submit">Entrar al sistema</button>
+              </form>
+            </div>
+          </article>
+
+          <aside class="panel reveal" aria-label="Panel de progreso del jugador">
+            <h3>Tu progreso</h3>
+            <p class="form-note">Datos sincronizados con tus reservas y rendimiento semanal.</p>
+            <div class="stats">
+              <div class="stat"><strong>28</strong><span>Partidas jugadas</span></div>
+              <div class="stat"><strong>3</strong><span>Reservas activas</span></div>
+              <div class="stat"><strong>16</strong><span>Victorias</span></div>
+              <div class="stat"><strong>12</strong><span>Derrotas</span></div>
+              <div class="stat"><strong>1.33</strong><span>Ratio V/D</span></div>
+              <div class="stat"><strong>Recluta</strong><span>Rango actual</span></div>
+            </div>
+          </aside>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" id="contacto">
+      <div class="wrap reveal">
+        <h2 class="section-title">Contacto y reservas privadas</h2>
+        <p class="section-sub">Coordinamos arriendos para grupos, empresas y celebraciones con soporte operativo en terreno.</p>
+
+        <div class="contact-grid">
+          <article class="contact-card reveal">
+            <h3>Escríbenos</h3>
+            <form class="field-grid" action="#" method="post">
+              <div>
+                <label class="label" for="contacto-nombre">Nombre</label>
+                <input id="contacto-nombre" name="contacto_nombre" type="text" required />
+              </div>
+              <div>
+                <label class="label" for="contacto-correo">Correo</label>
+                <input id="contacto-correo" name="contacto_correo" type="email" required />
+              </div>
+              <div>
+                <label class="label" for="contacto-mensaje">Mensaje</label>
+                <textarea id="contacto-mensaje" name="contacto_mensaje" rows="5" placeholder="Cuéntanos cuántas personas son y qué tipo de jornada buscan" required></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit">Enviar solicitud</button>
+            </form>
+          </article>
+
+          <aside class="contact-card reveal">
+            <h3>Reservas privadas</h3>
+            <p>
+              Disponible para grupos cerrados desde 10 jugadores, activaciones de marca y entrenamientos de equipo con arbitraje.
+            </p>
+            <div class="summary" style="margin-top: 14px;">
+              <div><span>Correo</span><strong>reservas@cqbfactory.cl</strong></div>
+              <div><span>WhatsApp</span><strong>+56 9 7654 3210</strong></div>
+              <div><span>Ubicación</span><strong>Santiago, Región Metropolitana</strong></div>
+            </div>
+            <div class="cta">Agenda tu próxima partida CQB</div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">CQB Factory 2026. Comunidad de airsoft CQB enfocada en seguridad, estrategia y juego limpio.</div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const mainMenu = document.getElementById("mainMenu");
+
+    if (menuToggle && mainMenu) {
+      menuToggle.addEventListener("click", () => {
+        mainMenu.classList.toggle("open");
+      });
+    }
+
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanels = document.querySelectorAll(".tab-panel");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.getAttribute("data-target");
+
+        tabButtons.forEach((btn) => {
+          btn.classList.remove("active");
+          btn.setAttribute("aria-selected", "false");
+        });
+
+        tabPanels.forEach((panel) => panel.classList.remove("active"));
+
+        button.classList.add("active");
+        button.setAttribute("aria-selected", "true");
+
+        const panel = document.getElementById(target);
+        if (panel) {
+          panel.classList.add("active");
+        }
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  </script>
+</body>
+</html>
